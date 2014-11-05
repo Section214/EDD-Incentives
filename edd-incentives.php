@@ -90,6 +90,7 @@ if( ! class_exists( 'EDD_Incentives' ) ) {
 
             if( is_admin() ) {
                 require_once EDD_INCENTIVES_DIR . 'includes/admin/pages.php';
+                require_once EDD_INCENTIVES_DIR . 'includes/admin/notices.php';
                 require_once EDD_INCENTIVES_DIR . 'includes/admin/meta-boxes.php';
             }
         }

@@ -139,15 +139,29 @@ add_action( 'manage_posts_custom_column', 'edd_incentives_render_dashboard_colum
 
 
 /**
- * Remove Quick Edit from the post actions
+ * Tweak post actions
  *
  * @since       1.0.0
  * @param       array $actions The post actions array
- * @param       int $post_id The ID for a given row item
+ * @param       object $post The WordPress object for a given row item
  * @return      array $actions The updated post actions array
  */
-function edd_incentives_post_row_actions( $actions, $post_id ) {
-    unset( $actions['inline hide-if-no-js'] );
+function edd_incentives_post_row_actions( $actions, $post ) {
+    if( get_post_type() == 'incentive' ) {
+        unset( $actions['inline hide-if-no-js'] );
+
+        $insert = true;
+        foreach( $actions as $action => $link ) {
+            $new_actions[$action] = $link;
+
+            if( $insert ) {
+                $new_actions['duplicate'] = '<a href="' . add_query_arg( array( 'post' => $post->ID, 'edd-action' => 'duplicate_incentive' ) ) . '">' . __( 'Duplicate', 'edd-incentives' ) . '</a>';
+                $insert = false;
+            }
+        }
+
+        $actions = $new_actions;
+    }
 
     return $actions;
 }
