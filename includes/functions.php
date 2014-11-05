@@ -89,3 +89,43 @@ function edd_incentives_parse_template_tags( $id ) {
     
     return apply_filters( 'edd_incentives_parts_template_tags', $content );
 }
+
+
+/**
+ * Get the system currency symbol
+ *
+ * @since       1.0.0
+ * @return      string $currency The currency symbol
+ */
+function edd_incentives_get_currency() {
+    $currency = edd_get_currency();
+
+    switch ( $currency ) {
+        case "GBP" :
+            $currency = '&pound;';
+            break;
+        case "BRL" :
+            $currency = 'R&#36;';
+            break;
+        case "EUR" :
+            $currency = '&euro;';
+            break;
+        case "USD" :
+        case "AUD" :
+        case "CAD" :
+        case "HKD" :
+        case "MXN" :
+        case "NZD" :
+        case "SGD" :
+            $currency = '&#36;';
+            break;
+        case "JPY" :
+            $currency = '&yen;';
+            break;
+        default :
+            $currency = '&#36;';
+            break;
+    }
+
+    return $currency;
+}

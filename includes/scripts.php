@@ -29,7 +29,7 @@ function edd_incentives_admin_scripts( $hook ) {
     }
 
     // Use minified libraries if SCRIPT_DEBUG is turned off
-    $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+    $suffix     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
     wp_enqueue_style( 'edd-incentives-select2', EDD_INCENTIVES_URL . 'assets/css/select2' . $suffix . '.css' );
     wp_enqueue_script( 'edd-incentives-select2', EDD_INCENTIVES_URL . 'assets/js/select2' . $suffix . '.js', array( 'jquery' ) );

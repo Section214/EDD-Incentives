@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     'use strict';
 
     jQuery('.edd-incentives-select2').select2({
-        width: '100%',
+        width: '250px'
     });
 
     jQuery('#_edd_incentive_discount').select2({
@@ -11,6 +11,16 @@ jQuery(document).ready(function ($) {
         allowClear: true,
         width: '100%'
     });
+
+    jQuery('#_edd_incentive_button_type').select2({
+        width: '100%'
+    });
+
+    jQuery('#_edd_incentive_downloads').select2({
+        width: '100%',
+    });
+
+    
 
     jQuery('.edd-incentives-colorbox').colorbox({
         inline: true,
@@ -43,4 +53,21 @@ jQuery(document).ready(function ($) {
             jQuery('.edd-incentives-button-type-image').css('display', 'none');
         }
     });
+
+    jQuery("select[name='_edd_incentive_meta[condition_type]']").change(function () {
+        if (jQuery("select[name='_edd_incentive_meta[condition_type]'] option:selected").val() === 'products') {
+            jQuery('.edd-incentive-condition-product').css('display', 'block');
+            jQuery('.edd-incentive-condition-value').css('display', 'none');
+            jQuery('.edd-incentive-condition-count').css('display', 'none');
+        } else if (jQuery("select[name='_edd_incentive_meta[condition_type]'] option:selected").val() === 'value') {
+            jQuery('.edd-incentive-condition-product').css('display', 'none');
+            jQuery('.edd-incentive-condition-value').css('display', 'block');
+            jQuery('.edd-incentive-condition-count').css('display', 'none');
+        } else if (jQuery("select[name='_edd_incentive_meta[condition_type]'] option:selected").val() === 'count') {
+            jQuery('.edd-incentive-condition-product').css('display', 'none');
+            jQuery('.edd-incentive-condition-value').css('display', 'none');
+            jQuery('.edd-incentive-condition-count').css('display', 'block');
+        }
+    });
+        
 });

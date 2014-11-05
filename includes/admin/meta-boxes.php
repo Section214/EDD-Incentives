@@ -23,6 +23,7 @@ function edd_incentives_add_meta_boxes() {
     add_meta_box( 'edd-incentive-preview', __( 'Preview', 'edd-incentives' ), 'edd_incentives_render_preview', 'incentive', 'side', 'default' );
     add_meta_box( 'edd-incentive-options', __( 'Options', 'edd-incentives' ), 'edd_incentives_render_options', 'incentive', 'side', 'default' );
     add_meta_box( 'edd-incentive-exit-options', __( 'Exit Button', 'edd-incentives' ), 'edd_incentives_render_exit_options', 'incentive', 'side', 'default' );
+    add_meta_box( 'edd-incentive-conditions', __( 'Conditions For Display', 'edd-incentives' ), 'edd_incentives_render_conditions', 'incentive', 'normal', 'default' );
 
     // Render the pseudo-metabox for the template tags
     add_action( 'edit_form_after_title', 'edd_incentives_render_template_tags' );
@@ -182,6 +183,90 @@ function edd_incentives_render_exit_options() {
 
 
 /**
+ * Add the conditions meta box
+ *
+ * @since       1.0.0
+ * @global      object $post The WordPress object for this post
+ * @return      void
+ */
+function edd_incentives_render_conditions() {
+    global $post;
+
+    $post_id        = $post->ID;
+    $meta           = get_post_meta( $post_id, '_edd_incentive_meta', true );
+    $downloads      = get_posts( array( 'post_type' => 'download', 'numberposts' => 999999, 'post_status' => 'publish' ) );
+    $product_css    = ( ! isset( $meta['condition_type'] ) || $meta['condition_type'] == 'products' ? '' : ' style="display: none;"' );
+    $value_css      = ( isset( $meta['condition_type'] ) && $meta['condition_type'] == 'value' ? '' : ' style="display: none;"' );
+    $count_css      = ( isset( $meta['condition_type'] ) && $meta['condition_type'] == 'count' ? '' : ' style="display: none;"' );
+
+    // Condition type
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_condition_type">' . __( 'Type', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<select class="edd-incentives-select2" name="_edd_incentive_meta[condition_type]" id="_edd_incentive_condition_type">';
+    echo '<option value="products"' . ( ! isset( $meta['condition_type'] ) || $meta['condition_type'] == 'products' ? ' selected' : '' ) . '>' . __( 'Products in cart', 'edd-incentives' ) . '</option>';
+    echo '<option value="value"' . ( $meta['condition_type'] == 'value' ? ' selected' : '' ) . '>' . __( 'Combined value', 'edd-incentives' ) . '</option>';
+    echo '<option value="count"' . ( $meta['condition_type'] == 'count' ? ' selected' : '' ) . '>' . __( 'Number of products', 'edd-incentives' ) . '</option>';
+    echo '</select>';
+    echo '</p>';
+
+    echo '<div class="edd-incentive-condition-product"' . $product_css . '>';
+
+    // Condition... condition?
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_product_condition">' . __( 'Condition', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<select class="edd-incentives-select2" name="_edd_incentive_meta[product_condition]" id="_edd_incentive_product_condition">';
+    echo '<option value="any"' . ( ! isset( $meta['product_condition'] ) || $meta['product_condition'] == 'any' ? ' selected' : '' ) . '>' . __( 'Any of the products', 'edd-incentives' ) . '</option>';
+    echo '<option value="all"' . ( $meta['product_condition'] == 'all' ? ' selected' : '' ) . '>' . __( 'All of the products', 'edd-incentives' ) . '</option>';
+    echo '</select>';
+    echo '</p>';
+
+    // Downloads
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_downloads">' . __( 'Downloads', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<select class="edd-incentives-select2" name="_edd_incentive_meta[downloads][]" id="_edd_incentive_downloads" multiple>';
+    foreach( $downloads as $key => $download ) {
+        echo '<option value="' . $download->ID . '"' . ( array_key_exists( $download->ID, $meta['downloads'] ) ? ' selected' : '' ) . '>' . $download->post_title . '</option>';
+    }
+    echo '</select>';
+    echo '</p>';
+
+    echo '</div>';
+
+    echo '<div class="edd-incentive-condition-value"' . $value_css . '>';
+
+    // Minimum value
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_minimum_value">' . __( 'Minimum Value', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<input type="text" name="_edd_incentive_meta[minimum_value]" id="_edd_incentive_minimum_value" value="' . ( isset( $meta['minimum_value'] ) ? $meta['minimum_value'] : '' ) . '" placeholder="' . edd_incentives_get_currency() . '" />';
+    echo '</p>';
+
+    // Maximum value
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_maximum_value">' . __( 'Maximum Value', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<input type="text" name="_edd_incentive_meta[maximum_value]" id="_edd_incentive_maximum_value" value="' . ( isset( $meta['maximum_value'] ) ? $meta['maximum_value'] : '' ) . '" placeholder="' . edd_incentives_get_currency() . '" />';
+    echo '</p>';
+
+    echo '</div>';
+
+    echo '<div class="edd-incentive-condition-count"' . $count_css . '>';
+
+    // Minimum count
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_minimum_count">' . __( 'Minimum Number', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<input type="number" min="0" name="_edd_incentive_meta[minimum_count]" id="_edd_incentive_minimum_count" value="' . ( isset( $meta['minimum_count'] ) && $meta['minimum_count'] != '' ? $meta['minimum_count'] : '0' ) . '" />';
+    echo '</p>';
+
+    // Maximum count
+    echo '<p>';
+    echo '<strong><label for="_edd_incentive_maximum_count">' . __( 'Maximum Number', 'edd-incentives' ) . '</label></strong><br />';
+    echo '<input type="number" min="0" name="_edd_incentive_meta[maximum_count]" id="_edd_incentive_maximum_count" value="' . ( isset( $meta['maximum_count'] ) && $meta['maximum_count'] != '' ? $meta['maximum_count'] : '0' ) . '" />';
+    echo '</p>';
+
+    echo '</div>';
+}
+
+
+/**
  * Save post meta when the save_post action is called
  *
  * @since       1.0.0
@@ -230,6 +315,8 @@ function edd_incentives_save_meta( $post_id ) {
             } else {
                 if( is_string( $_POST[$field] ) ) {
                     $new = esc_attr( $_POST[$field] );
+                } elseif( is_int( $_POST[$field] ) ) {
+                    $new = absint( $_POST[$field] );
                 } else {
                     $new = $_POST[$field];
                 }
