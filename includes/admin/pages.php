@@ -70,9 +70,10 @@ add_filter( 'parent_file', 'edd_incentives_fix_parent_file' );
  * @return      void
  */
 function edd_incentives_render_tutorial_page() {
+    $url = ( isset( $_GET['post'] ) ? admin_url( 'post.php?action=edit&post=' . $_GET['post'] ) : admin_url( 'post-new.php?post_type=incentive' ) );
     ?>
         <div class="wrap">
-            <h2><?php _e( 'Incentives Tutorial', 'edd-incentives' ); ?> <a class="add-new-h2" href="<?php echo sprintf( admin_url( 'post.php?post=%s&action=edit' ), $_GET['post'] ); ?>"><?php _e( 'Return to Incentive Editor', 'edd-incentives' ); ?></a></h2>
+            <h2><?php _e( 'Incentives Tutorial', 'edd-incentives' ); ?> <a class="add-new-h2" href="<?php echo $url; ?>"><?php _e( 'Return to Incentive Editor', 'edd-incentives' ); ?></a></h2>
         </div>
     <?php
 }
