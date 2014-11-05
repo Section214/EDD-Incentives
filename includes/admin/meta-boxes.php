@@ -40,27 +40,30 @@ add_action( 'add_meta_boxes', 'edd_incentives_add_meta_boxes' );
  */
 function edd_incentives_render_template_tags() {
     global $post;
-    ?>
-        <div class="edd-incentive-template-tags postbox">
-            <h3><span><?php _e( 'Template Tags', 'edd-incentives' ); ?></span></h3>
-            <div class="inside">
-                <?php
-                    echo '<h4>' . __( 'Use the following template tags for entering the given data in the modal.', 'edd-incentives' ) . '</h4>';
 
-                    $template_tags = edd_incentives_get_template_tags();
-                    foreach( $template_tags as $tag => $description ) {
-                        echo '<div class="edd-incentive-template-tag-block">';
-                        echo '<span class="edd-incentive-template-tag">{' . $tag . '}</span>';
-                        echo '<span class="edd-incentive-template-tag-description">' . $description . '</span>';
-                        echo '</div>';
-                    }
-                ?>
-                <div class="edd-incentive-clear"></div>
-                <br />
-                <p class="edd-incentive-tip description"><?php printf( __( 'Need more help? <a href="%s">Click here</a> for a more in-depth tutorial on creating Incentives!', 'edd-incentives' ), 'edit.php?post_type=download&page=incentives-tutorial&post=' . $post->ID ); ?></p>
+    if( $post->post_type == 'incentive' ) {
+        ?>
+            <div class="edd-incentive-template-tags postbox">
+                <h3><span><?php _e( 'Template Tags', 'edd-incentives' ); ?></span></h3>
+                <div class="inside">
+                    <?php
+                        echo '<h4>' . __( 'Use the following template tags for entering the given data in the modal.', 'edd-incentives' ) . '</h4>';
+
+                        $template_tags = edd_incentives_get_template_tags();
+                        foreach( $template_tags as $tag => $description ) {
+                            echo '<div class="edd-incentive-template-tag-block">';
+                            echo '<span class="edd-incentive-template-tag">{' . $tag . '}</span>';
+                            echo '<span class="edd-incentive-template-tag-description">' . $description . '</span>';
+                            echo '</div>';
+                        }
+                    ?>
+                    <div class="edd-incentive-clear"></div>
+                    <br />
+                    <p class="edd-incentive-tip description"><?php printf( __( 'Need more help? <a href="%s">Click here</a> for a more in-depth tutorial on creating Incentives!', 'edd-incentives' ), 'edit.php?post_type=download&page=incentives-tutorial&post=' . $post->ID ); ?></p>
+                </div>
             </div>
-        </div>
-    <?php
+        <?php
+    }
 }
 
 
@@ -117,15 +120,6 @@ function edd_incentives_render_options() {
 
     echo '</select>';
     echo '</p>';
-
-    // Newsletter signup
-    if( $plugin = edd_incentives_has_subscription_support() ) {
-        echo '<p>';
-        echo '<strong><label for="_edd_incentive_subscribe">' . __( 'Subscription Form', 'edd-incentives' ) . '</label></strong><br />';
-        echo '<input type="checkbox" name="_edd_incentive_meta[subscribe]" id="_edd_incentive_subscribe" value="1" ' . checked( true, $subscribe, false ) . ' />';
-        echo '<label for="_edd_incentive_subscribe"><span class="description">' . sprintf( __( 'Check to display %s form', 'edd-incentives' ), $plugin ) . '</span></label>';
-        echo '</p>';
-    }
 
     do_action( 'edd_incentives_options_fields', $post_id );
 
