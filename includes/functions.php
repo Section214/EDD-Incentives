@@ -129,3 +129,26 @@ function edd_incentives_get_currency() {
 
     return $currency;
 }
+
+
+/**
+ * Check if a supported subscription plugin is installed
+ *
+ * @since       1.0.0
+ * @return      mixed array $plugin if true, bool false otherwise
+ */
+function edd_incentives_has_subscription_support() {
+    $plugin = false;
+
+    if( class_exists( 'EDD_MailChimp' ) ) {
+        $plugin = 'MailChimp';
+    } else if( defined( 'EDDCP_PLUGIN_DIR' ) ) {
+        $plugin = 'Campaign Monitor';
+    } else if( defined( 'EDD_AWEBER_PATH'  ) ) {
+        $plugin = 'aWeber';
+    } else if( class_exists( 'EDD_GetResponse' ) ) {
+        $plugin = 'GetResponse';
+    }
+
+    return $plugin;
+}

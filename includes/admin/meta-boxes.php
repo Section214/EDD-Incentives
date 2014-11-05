@@ -119,11 +119,13 @@ function edd_incentives_render_options() {
     echo '</p>';
 
     // Newsletter signup
-    echo '<p>';
-    echo '<strong><label for="_edd_incentive_subscribe">' . __( 'Subscription Form', 'edd-incentives' ) . '</label></strong><br />';
-    echo '<input type="checkbox" name="_edd_incentive_meta[subscribe]" id="_edd_incentive_subscribe" value="1" ' . checked( true, $subscribe, false ) . ' />';
-    echo '<label for="_edd_incentive_subscribe">' . __( 'Check to display a subscription form', 'edd-incentives' ) . '</label>';
-    echo '</p>';
+    if( $plugin = edd_incentives_has_subscription_support() ) {
+        echo '<p>';
+        echo '<strong><label for="_edd_incentive_subscribe">' . __( 'Subscription Form', 'edd-incentives' ) . '</label></strong><br />';
+        echo '<input type="checkbox" name="_edd_incentive_meta[subscribe]" id="_edd_incentive_subscribe" value="1" ' . checked( true, $subscribe, false ) . ' />';
+        echo '<label for="_edd_incentive_subscribe"><span class="description">' . sprintf( __( 'Check to display %s form', 'edd-incentives' ), $plugin ) . '</span></label>';
+        echo '</p>';
+    }
 
     do_action( 'edd_incentives_options_fields', $post_id );
 

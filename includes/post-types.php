@@ -80,11 +80,23 @@ function edd_incentives_dashboard_columns( $columns ) {
     $columns = array(
         'cb'        => '<input type="checkbox" />',
         'title'     => __( 'Title', 'edd-incentives' ),
-        'discount'  => __( 'Discount', 'edd-incentives' ),
-        'subscribe' => __( 'Subscriptions', 'edd-incentives' ),
+        'discount'  => __( 'Discount', 'edd-incentives' )
+    );
+
+    if( $plugin = edd_incentives_has_subscription_support() ) {
+        $more_columns = array(
+            'subscribe' => __( 'Subscriptions', 'edd-incentives' ),
+        );
+
+        $columns = array_merge( $columns, $more_columns );
+    }
+
+    $more_columns = array(
         'author'    => __( 'Author', 'edd-incentives' ),
         'date'      => __( 'Date', 'edd-incentives' )
     );
+    
+    $columns = array_merge( $columns, $more_columns );
 
     return apply_filters( 'edd_incentives_dashboard_columns', $columns );
 }
