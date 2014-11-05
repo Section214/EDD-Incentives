@@ -223,6 +223,15 @@
     width: 10%;
 }
 
+.edd-incentive-column-discount-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.edd-incentive-column-discount-item span{
+    font-weight: bold;
+}
+
 
 /* Meta box styles
 -------------------------------------------------------------- */

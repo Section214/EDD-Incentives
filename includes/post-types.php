@@ -106,9 +106,21 @@ function edd_incentives_render_dashboard_columns( $column_name, $post_id ) {
         switch( $column_name ) {
             case 'discount':
                 if( isset( $meta['discount'] ) && $meta['discount'] != '' ) {
-                    $discount_code = edd_get_discount_code( $meta['discount'] );
+                    $discount           = edd_get_discount( $meta['discount'] );
+                    $discount_title     = $discount->post_title;
+                    $discount_type      = edd_get_discount_type( $meta['discount'] );
+                    $discount_amount    = edd_get_discount_amount( $meta['discount'] );
+                    $discount_code      = edd_get_discount_code( $meta['discount'] );
 
-                    echo '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $meta['discount'] ) . '">' . $discount_code . '</a>';
+                    if( $discount_type == 'percent' ) {
+                        $discount_amount        = $discount_amount . __( '%', 'edd-incentives' );
+                    } else {
+                        $discount_amount        = edd_currency_filter( edd_format_amount( (double) $discount_amount ) );
+                    }
+
+                    echo '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $meta['discount'] ) . '">' . $discount_title . '</a><br />';
+                    echo '<div class="edd-incentive-column-discount-item"><span>' . __( 'Code:', 'edd-incentives' ) . '</span> ' . $discount_code . '</div>';
+                    echo '<div class="edd-incentive-column-discount-item"><span>' . __( 'Value:', 'edd-incentives' ) . '</span> ' . $discount_amount . '</div>';
                 } else {
                     _e( 'None', 'edd-incentives' );
                 }
