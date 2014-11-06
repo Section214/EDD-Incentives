@@ -138,7 +138,10 @@ function edd_incentives_render_dashboard_columns( $column_name, $post_id ) {
                 }
                 break;
             case 'subscribe':
-                if( isset( $meta['subscribe'] ) && $meta['subscribe'] != '' ) {
+                $the_post       = get_post( $post_id );
+                $subscription   = ( strpos( $the_post->post_content, '{subscription_form}' ) !== false );
+
+                if( $subscription ) {
                     echo '<span class="edd-incentive-enabled">' . __( 'Enabled', 'edd-incentives' ) . '</span>';
                 } else {
                     echo '<span class="edd-incentive-disabled">' . __( 'Disabled', 'edd-incentives' ) . '</span>';
