@@ -29,6 +29,14 @@ function edd_incentives_get_template_tags() {
         'discount_amount_text'  => __( 'The written amount of the selected discount code.', 'edd-incentives' ),
     );
 
+    if( $plugin = edd_incentives_has_subscription_support() ) {
+        $subscription_tag = array(
+            'subscription_form' => sprintf( __( 'Insert %s subscription form.', 'edd-incentive' ), $plugin )
+        );
+
+        $template_tags = array_merge( $template_tags, $subscription_tag );
+    }
+
     return apply_filters( 'edd_incentives_template_tags', $template_tags );
 }
 
@@ -87,6 +95,10 @@ function edd_incentives_parse_template_tags( $id ) {
     $content = str_replace( '{discount_amount_text}', $discount_amount_text, $content );
     $content = str_replace( '{discount_url}', $discount_url, $content );
     
+    if( $plugin = edd_incentives_has_subscription_support() ) {
+        $content = str_replace( '{subscription_form}', edd_incentives_get_subscription_form( $plugin ), $content );
+    }
+
     return apply_filters( 'edd_incentives_parts_template_tags', $content );
 }
 
@@ -150,5 +162,27 @@ function edd_incentives_has_subscription_support() {
         $plugin = 'GetResponse';
     }
 
-    return $plugin;
+    return apply_filters( 'edd_incentives_has_subscription_support', $plugin );
+}
+
+
+/**
+ * Returns the subscription form for a given plugin
+ *
+ * @since       1.0.0
+ * @param       string $plugin The plugin to return the form for
+ * @return      string $form The subscription form
+ */
+function edd_incentives_get_subscription_form( $plugin ) {
+    if( $plugin == 'MailChimp' ) {
+
+    } elseif( $plugin == 'Campaign Monitor' ) {
+
+    } elseif( $plugin == 'aWeber' ) {
+
+    } elseif( $plugin == 'GetResponse' ) {
+
+    }
+
+    return apply_filters( 'edd_incentives_get_subscription_form', $plugin );
 }

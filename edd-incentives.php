@@ -87,6 +87,7 @@ if( ! class_exists( 'EDD_Incentives' ) ) {
             require_once EDD_INCENTIVES_DIR . 'includes/functions.php';
             require_once EDD_INCENTIVES_DIR . 'includes/actions.php';
             require_once EDD_INCENTIVES_DIR . 'includes/post-types.php';
+            require_once EDD_INCENTIVES_DIR . 'includes/templates/content.php';
 
             if( is_admin() ) {
                 require_once EDD_INCENTIVES_DIR . 'includes/admin/pages.php';
